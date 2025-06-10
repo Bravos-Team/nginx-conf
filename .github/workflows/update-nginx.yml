@@ -1,0 +1,26 @@
+name: CI - Build and Deploy Spring Boot
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Deploy
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            sudo apt install nginx
+            rm -rf nginx-conf/
+            git clone --depth=1 https://github.com/Bravos-Team/nginx-conf.git
+            sudo cp nginx-conf/nginx.conf /etc/nginx/sites-available/default
+            sudo nginx -t && sudo systemctl enable nginx && sudo systemctl start nginx && sudo systemctl reload nginx
