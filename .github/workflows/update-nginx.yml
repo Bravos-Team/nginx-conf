@@ -1,17 +1,17 @@
-name: CI - Build and Deploy Spring Boot
+name: Update nginx
 
 on:
   push:
     branches: [master]
 
 jobs:
-  build:
+  update-nginx:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Deploy
+      - name: Update
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.HOST }}
